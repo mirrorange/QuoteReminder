@@ -1,7 +1,9 @@
 {
+    "quotation_url":"",
     "smtp_server":"",
     "smtp_user":"",
     "smtp_password":"",
     "from":"",
-    "to":""
+    "to":"",
+    "headless":true
 }

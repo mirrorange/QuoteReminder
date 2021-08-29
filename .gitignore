@@ -1,1 +1,5 @@
+/Chrome
+/.vscode
+lists.json
 config.json
+chromedriver.exe

@@ -10,12 +10,10 @@ from email.mime.text import MIMEText
 import json
 
 def sendMail(title,detail,link):
-    with open("config.json","w") as f:
-        config = json.load("config.json")
     # 登录Smtp服务器
     smtp_user = config["smtp_user"]
     smtp_password = config["smtp_password"]
-    smtp = smtplib.SMTP("smtp.ym.163.com",25)
+    smtp = smtplib.SMTP(config["smtp_server"],25)
     smtp.login(user=smtp_user,password=smtp_password)
     # 准备邮件内容
     html_msg = "<p>" + title + "</p>" + "<p>" + detail + "</p>" +"<p><a href=\"" + link + "\">点击这里查看</a></p>"
@@ -51,7 +49,8 @@ def getOptions():
     options.add_argument("blink-settings=imagesEnabled=false")
     options.add_argument("--single-process")
     options.add_argument("log-level=3")
-    options.add_argument("--headless")
+    if config["headless"]:
+        options.add_argument("--headless")
     return options
 
 def getInformation():
@@ -105,15 +104,17 @@ def process(title,detail,link):
     print("[Log] ","等待20秒重新检查")
     return True
 
-
+#读取配置
+with open("config.json","r") as f:
+    config = json.load(f)
 # 初始化Lists
-linkList = []
 titleList = []
 detailList = []
+linkList = []
 loadList()
 # 配置、启动浏览器并访问页面
 driver = webdriver.Chrome(chrome_options=getOptions())
-driver.get("https://sourcing.alibaba.com/rfq_search_list.htm?categoryIds=327&recently=Y")
+driver.get("{}&recently=Y".format(config["quotation_url"]))
 # 刷新数据
 while True:
     informations = getInformation()
